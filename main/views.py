@@ -1,5 +1,13 @@
 from django.shortcuts import render
 
-# Create your views here.
-def home(request):
-    return render(request, 'home.html')
+def index(request):
+    return render(request, 'index.html')
+
+def homepage(request):
+    return render(request, 'homepage.html')
+
+def wish(request):
+    return render(request, 'wish.html')
+
+def yourperson(request):
+    return render(request, 'yourperson.html')

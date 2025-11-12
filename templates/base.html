@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Secret Santa{% endblock %}</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #fbeed8;
+            color: #5a2a27;
+        }
+        header {
+            background: linear-gradient(90deg, #d62828, #f77f00);
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        header h1 {
+            font-size: 2em;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        nav {
+            margin-top: 10px;
+        }
+        nav a {
+            color: #fff;
+            margin: 0 20px;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: color 0.3s, transform 0.2s;
+        }
+        nav a:hover {
+            color: #ffe066;
+            transform: scale(1.1);
+        }
+        footer {
+            background: linear-gradient(90deg, #f77f00, #d62828);
+            color: white;
+            text-align: center;
+            padding: 15px 10px;
+            margin-top: 50px;
+            font-size: 1em;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🎄 Welcome to Secret Santa Listing 🎁</h1>
+    <nav>
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'wish' %}">Add to your wish list</a>
+    </nav>
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<footer>
+    🎅 Secret Santa Project by Savanna Morris, Connor Gregorius, and Joey Selner © 2025 🎁
+</footer>
+
+</body>
+</html>

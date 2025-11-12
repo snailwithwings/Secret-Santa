@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Enter Your Name{% endblock %}
+{% block content %}
+<h1>🎅 Please Enter Your First Name 🎁</h1>
+
+<form id="nameForm">
+  <label for="fname">First name:</label><br>
+  <input type="text" id="fname" name="fname" placeholder="Type your name here" required><br>
+  <input type="submit" value="See Who You Have!">
+</form>
+
+<p class="note">Your Secret Santa awaits...</p>
+
+<style>
+form {
+    background-color: #ffafcc;
+    border: 4px solid #d62828;
+    border-radius: 20px;
+    display: inline-block;
+    padding: 40px 60px;
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.3);
+}
+input[type="text"], input[type="submit"] {
+    font-size: 1.2em;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 2px solid #d62828;
+    text-align: center;
+    padding: 10px;
+}
+input[type="submit"] {
+    background-color: #f77f00;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+input[type="submit"]:hover {
+    background-color: #d62828;
+    transform: scale(1.05);
+}
+.note {
+    margin-top: 25px;
+    font-size: 1.2em;
+}
+</style>
+
+<script>
+document.getElementById('nameForm').addEventListener('submit', e => {
+    e.preventDefault();
+    window.location.href = "{% url 'yourperson' %}";
+});
+</script>
+{% endblock %}

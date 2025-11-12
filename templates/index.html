@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Secret Santa 2025{% endblock %}
+{% block content %}
+<h1>🎅 Secret Santa 2025 🎁</h1>
+<h2>Shhh. It's a Secret!</h2>
+
+<div class="gift-box" id="startBox">Your Gift Awaits!</div>
+
+<p>Get ready Movie night!<br>
+Please click the box to get started</p>
+
+<style>
+.gift-box {
+    margin: 40px auto;
+    width: 200px;
+    height: 200px;
+    background-color: #ffafcc;
+    border: 5px solid #d62828;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.gift-box:hover { transform: scale(1.1); }
+</style>
+
+<script>
+document.getElementById('startBox').addEventListener('click', () => {
+    window.location.href = "{% url 'homepage' %}";
+});
+</script>
+{% endblock %}
