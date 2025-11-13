@@ -4,13 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Secret Santa{% endblock %}</title>
+
     <style>
+        /* ---------------- GLOBAL STYLES ---------------- */
         body {
             margin: 0;
             font-family: 'Comic Sans MS', cursive, sans-serif;
             background-color: #fbeed8;
             color: #5a2a27;
+            text-align: center; /* Center all text by default */
         }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;   /* Centers all elements */
+            justify-content: flex-start;
+            padding: 40px 20px;    /* Spacing around content */
+            width: 100%;
+            min-height: 70vh;      /* Ensures content doesn't hug footer */
+            box-sizing: border-box;
+        }
+
+        /* ---------------- HEADER ---------------- */
         header {
             background: linear-gradient(90deg, #d62828, #f77f00);
             color: #fff;
@@ -18,14 +34,17 @@
             text-align: center;
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
+
         header h1 {
             font-size: 2em;
             margin: 0;
             letter-spacing: 1px;
         }
+
         nav {
             margin-top: 10px;
         }
+
         nav a {
             color: #fff;
             margin: 0 20px;
@@ -34,10 +53,13 @@
             font-weight: bold;
             transition: color 0.3s, transform 0.2s;
         }
+
         nav a:hover {
             color: #ffe066;
             transform: scale(1.1);
         }
+
+        /* ---------------- FOOTER ---------------- */
         footer {
             background: linear-gradient(90deg, #f77f00, #d62828);
             color: white;
@@ -51,6 +73,7 @@
         }
     </style>
 </head>
+
 <body>
 
 <header>
@@ -62,7 +85,8 @@
 </header>
 
 <main>
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
 </main>
 
 <footer>

@@ -6,14 +6,20 @@
 <div class="card-container">
     <div class="assignment-card">
         <h2>Hi, <span id="userName">[Your Name]</span>!</h2>
+        <h2>This shit's broken until everyone fills in their wishlist :D</h2>
         <p>You have been assigned to:</p>
         <p style="font-weight:bold; font-size:1.4em;" id="assignedPerson">[Assigned Person]</p>
 
         <p>Their Wishlist:</p>
         <ul id="wishlist">
-            <li>Example gift 1</li>
-            <li>Example gift 2</li>
-            <li>Example gift 3</li>
+            {% for item in wishlist_items %}
+                <li>
+                    <strong>{{ item.item_name }}</strong><br>
+                    <small>{{ item.details }}</small>
+                </li>
+            {% empty %}
+                <li>No wishlist items added yet.</li>
+            {% endfor %}
         </ul>
     </div>
 

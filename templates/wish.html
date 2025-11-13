@@ -1,15 +1,22 @@
 {% extends 'base.html' %}
 {% block title %}Add to Wishlist{% endblock %}
 {% block content %}
+
 <h1>🎁 Add to Your Wishlist 🎄</h1>
 <p class="budget">This year’s Secret Santa budget is <span style="color:#d62828;">$25</span>!</p>
 
 <div class="form-container">
+
     <form method="post">
         {% csrf_token %}
+
         <label for="personSelect">Select Your Name:</label>
         <select id="personSelect" name="personSelect" required>
             <option value="" disabled selected>-- Choose Your Name --</option>
+
+            {% for p in participants %}
+                <option value="{{ p.id }}">{{ p.name }}</option>
+            {% endfor %}
         </select>
 
         <label for="itemName">Gift Idea:</label>
@@ -24,31 +31,47 @@
     <button class="back-button" onclick="window.location.href='{% url 'homepage' %}'">
         ← Back to Home
     </button>
+
 </div>
 
 <p class="note">Keep your list within budget and make it merry! 🎅</p>
 
 <style>
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 form {
     background-color: #ffafcc;
     border: 4px solid #d62828;
     border-radius: 20px;
     padding: 40px 60px;
     box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+    width: 100%;
     max-width: 400px;
-    margin: auto;
 }
+
 label { display:block; margin-top:15px; font-size:1.2em; }
 select, input, textarea {
     width:100%; padding:10px; border-radius:10px; border:2px solid #d62828;
     margin-top:5px; text-align:center;
 }
+textarea { height: 100px; }
 button {
-    background-color:#f77f00; color:white; padding:12px 30px; border:none;
-    border-radius:10px; margin-top:20px; cursor:pointer; transition:0.2s;
+    background-color:#f77f00; color:white; padding:12px 30px;
+    border:none; border-radius:10px; margin-top:20px;
+    cursor:pointer; transition:0.2s;
 }
 button:hover { background-color:#d62828; transform:scale(1.05); }
-.back-button { background-color:#5a2a27; }
-.back-button:hover { background-color:#f77f00; }
+
+.back-button {
+    background-color:#5a2a27;
+}
+.back-button:hover {
+    background-color:#f77f00;
+}
 </style>
+
 {% endblock %}
