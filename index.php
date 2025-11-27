@@ -6,7 +6,7 @@
 <title>Secret Santa 2025</title>
 <style>
     body {
-        font-family: 'Comic Sans MS', cursive, sans-serif;
+        font-family: 'Comic Sans MS', sans-serif;
         background-color: #fbeed8;
         text-align: center;
         padding: 50px;
