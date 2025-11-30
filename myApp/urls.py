@@ -25,4 +25,5 @@ urlpatterns = [
     path('homepage/', views.homepage, name='homepage'),
     path('wish/', views.wish, name='wish'),
     path('yourperson/', views.yourperson, name='yourperson'),
+
 ]

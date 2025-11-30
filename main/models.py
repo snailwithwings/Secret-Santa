@@ -18,3 +18,14 @@ class WishlistItem(models.Model):
 
     def __str__(self):
         return f"{self.item_name} ({self.participant.name})"
+
+class Assignment(models.Model):
+    giver = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='assignment'
+    )
+    receiver = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='receiver_assignments'
+    )
+
+    def __str__(self):
+        return f"{self.giver.name} → {self.receiver.name}"

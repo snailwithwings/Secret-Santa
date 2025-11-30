@@ -1,47 +1,87 @@
 {% extends 'base.html' %}
 {% block title %}Your Target{% endblock %}
 {% block content %}
-<h1>🎅 Your Secret Santa Target 🎁</h1>
 
-<div class="card-container">
-    <div class="assignment-card">
-        <h2>Hi, <span id="userName">[Your Name]</span>!</h2>
-        <h2>This shit's broken until everyone fills in their wishlist :D</h2>
-        <p>You have been assigned to:</p>
-        <p style="font-weight:bold; font-size:1.4em;" id="assignedPerson">[Assigned Person]</p>
-
-        <p>Their Wishlist:</p>
-        <ul id="wishlist">
-            {% for item in wishlist_items %}
-                <li>
-                    <strong>{{ item.item_name }}</strong><br>
-                    <small>{{ item.details }}</small>
-                </li>
-            {% empty %}
-                <li>No wishlist items added yet.</li>
-            {% endfor %}
-        </ul>
-    </div>
+{% if error %}
+    <p style="color:red; font-size:1.2em; margin-bottom: 20px;">
+        {{ error }}
+    </p>
 
     <button class="back-button" onclick="window.location.href='{% url 'homepage' %}'">
-        ← Back to Home
+        Try Again
     </button>
-</div>
+
+{% else %}
+    <h1>🎅 Your Secret Santa Target 🎁</h1>
+
+    <div class="card-container">
+        <div class="assignment-card">
+
+            <h2>Hi, {{ participant.name }}!</h2>
+
+            {% if assigned_person %}
+                <p>You have been assigned to:</p>
+                <p class="assigned" style="font-weight:bold; font-size:1.4em;">
+                    {{ assigned_person.name }}
+                </p>
+
+                <p>Their Wishlist:</p>
+
+                <ul>
+                    {% for item in wishlist_items %}
+                        <li style="font-size:1.2em; margin:10px 0;">
+                            <strong>{{ item.item_name }}</strong>
+                            {% if item.details %}
+                                <br><small>{{ item.details }}</small>
+                            {% endif %}
+                        </li>
+                    {% empty %}
+                        <li>No wishlist items yet.</li>
+                    {% endfor %}
+                </ul>
+
+            {% else %}
+                <p>Assignments not generated yet! Check back later.</p>
+            {% endif %}
+        </div>
+
+        <button class="back-button" onclick="window.location.href='{% url 'homepage' %}'">
+            ← Back to Home
+        </button>
+    </div>
+{% endif %}
 
 <style>
 .card-container {
-    display:flex; flex-direction:column; align-items:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 }
 .assignment-card {
-    background-color:#ffafcc; border:4px solid #d62828; border-radius:20px;
-    padding:40px 60px; box-shadow:5px 5px 15px rgba(0,0,0,0.3);
-    max-width:500px; text-align:center;
+    background-color:#ffafcc;
+    border:4px solid #d62828;
+    border-radius:20px;
+    padding:40px 60px;
+    box-shadow:5px 5px 15px rgba(0,0,0,0.3);
+    max-width:500px;
+    width:100%;
+    text-align:center;
+    margin-bottom:20px;
 }
 .back-button {
-    background-color:#d62828; color:white; padding:12px 30px;
-    border:none; border-radius:10px; margin-top:20px; font-size:1.1em;
-    cursor:pointer; transition:0.2s;
+    background-color:#d62828;
+    border:none;
+    color:white;
+    padding:12px 30px;
+    font-size:1.1em;
+    border-radius:10px;
+    cursor:pointer;
+    transition:background-color 0.3s, transform 0.2s;
 }
-.back-button:hover { background-color:#f77f00; transform:scale(1.05); }
+.back-button:hover {
+    background-color:#f77f00;
+    transform:scale(1.05);
+}
 </style>
+
 {% endblock %}
