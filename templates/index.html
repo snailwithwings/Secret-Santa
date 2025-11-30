@@ -1,37 +1,106 @@
 {% extends 'base.html' %}
-{% block title %}Secret Santa 2025{% endblock %}
+{% block title %}Join or Create a Group{% endblock %}
 {% block content %}
-<h1>🎅 Secret Santa 2025 🎁</h1>
-<h2>Shhh. It's a Secret!</h2>
 
-<div class="gift-box" id="startBox">Your Gift Awaits!</div>
+<h1 class="page-title">
+    🎅 Secret Santa 2025 🎁
+</h1>
 
-<p>Get ready Movie night!<br>
-Please click the box to get started</p>
+<h2 class="subtitle">Join or Create a Group</h2>
+
+{% if error %}
+<p class="error-msg">{{ error }}</p>
+{% endif %}
+
+<form method="post" class="group-form">
+    {% csrf_token %}
+
+    <input type="text" name="fname" class="input-box"
+           placeholder="Enter Your Name" required>
+
+    <input type="text" name="groupCode" class="input-box"
+           placeholder="Enter Group Code">
+
+    <button type="submit" name="action" value="join" class="form-btn join-btn">
+        Join Group
+    </button>
+
+    <button type="submit" name="action" value="create" class="form-btn create-btn">
+        Create New Group
+    </button>
+</form>
 
 <style>
-.gift-box {
-    margin: 40px auto;
-    width: 200px;
-    height: 200px;
-    background-color: #ffafcc;
-    border: 5px solid #d62828;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5em;
-    font-weight: bold;
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
-    cursor: pointer;
-    transition: transform 0.2s;
+h1.page-title {
+    font-size: 3.2em;
+    margin: 10px 0;
 }
-.gift-box:hover { transform: scale(1.1); }
+
+.subtitle {
+    font-size: 2em;
+    margin-bottom: 25px;
+    color: #f77f00;
+}
+
+.error-msg {
+    color: #d62828;
+    font-size: 1.3em;
+    margin-bottom: 20px;
+}
+
+.group-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.input-box {
+    width: 280px;
+    padding: 15px;
+    border-radius: 12px;
+    border: 3px solid #d62828;
+    font-size: 1.2em;
+    text-align: center;
+    outline: none;
+    transition: 0.2s;
+}
+
+.input-box:focus {
+    border-color: #f77f00;
+    transform: scale(1.03);
+}
+
+.form-btn {
+    width: 200px;
+    padding: 14px 10px;
+    background-color: #ffafcc;
+    border: 3px solid #d62828;
+    border-radius: 15px;
+    font-size: 1.3em;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.form-btn:hover {
+    transform: scale(1.07);
+}
+
+.join-btn {
+    background-color: #ffc8dd;
+}
+
+.join-btn:hover {
+    background-color: #ff99c8;
+}
+
+.create-btn {
+    background-color: #fbc4ab;
+}
+
+.create-btn:hover {
+    background-color: #faa381;
+}
 </style>
 
-<script>
-document.getElementById('startBox').addEventListener('click', () => {
-    window.location.href = "{% url 'homepage' %}";
-});
-</script>
 {% endblock %}

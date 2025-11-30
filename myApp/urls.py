@@ -25,5 +25,5 @@ urlpatterns = [
     path('homepage/', views.homepage, name='homepage'),
     path('wish/', views.wish, name='wish'),
     path('yourperson/', views.yourperson, name='yourperson'),
-
+    path('assign/', views.generate_assignments, name='generate_assignments'),
 ]

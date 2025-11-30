@@ -1,88 +1,144 @@
-import random
-
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .models import User, WishlistItem, Assignment
+from django.http import HttpResponse
+from .models import Group, User, WishlistItem, Assignment
+import random
 
 
 def index(request):
-    return render(request, 'index.html')
-
-def homepage(request):
     if request.method == 'POST':
+        action = request.POST.get('action')
         name = request.POST.get('fname').strip()
 
-        # Save name to session
-        request.session['username'] = name
+        # CREATE NEW GROUP
+        if action == 'create':
+            while True:
+                new_code = str(random.randint(0, 9999)).zfill(4)
+                if not Group.objects.filter(code=new_code).exists():
+                    break
 
-        return redirect('yourperson')
+            group = Group.objects.create(code=new_code)
 
-    return render(request, 'homepage.html')
+            # Creator always first + auto-set
+            user = User.objects.create(name=name, group=group, is_creator=True)
+
+            request.session['username'] = name
+            request.session['group_code'] = group.code
+            return redirect('homepage')
+
+        # JOIN EXISTING GROUP
+        if action == 'join':
+            code = request.POST.get('groupCode', '').strip()
+
+            try:
+                group = Group.objects.get(code=code)
+            except Group.DoesNotExist:
+                return render(request, 'index.html', {
+                    'error': f"Group '{code}' not found."
+                })
+
+            # Check if they already exist in this group
+            existing_user = User.objects.filter(name__iexact=name, group=group).first()
+
+            if existing_user:
+                # Re-login returning user
+                request.session['username'] = existing_user.name
+                request.session['group_code'] = code
+                return redirect('homepage')
+
+            # Otherwise create a new user joining this group
+            user = User.objects.create(name=name, group=group)
+
+            request.session['username'] = name
+            request.session['group_code'] = code
+            return redirect('homepage')
+
+    return render(request, 'index.html')
+
+
+
+def homepage(request):
+    name = request.session.get('username')
+    code = request.session.get('group_code')
+
+    if not name or not code:
+        return redirect('index')
+
+    group = Group.objects.get(code=code)
+
+    user = User.objects.filter(name__iexact=name, group=group).first()
+    if not user:
+        # Should not happen normally, but safety check:
+        return redirect('index')
+
+    return render(request, 'homepage.html', {
+        'user': user,
+        'group': group,
+        'is_creator': user.is_creator
+    })
+
 
 def wish(request):
-    participants = User.objects.all()
+    name = request.session.get('username')
+    code = request.session.get('group_code')
+    group = Group.objects.get(code=code)
+    user = User.objects.get(name__iexact=name, group=group)
 
     if request.method == 'POST':
-        participant_id = request.POST.get('personSelect')
-        item_name = request.POST.get('itemName')
-        details = request.POST.get('details')
-
-        participant = User.objects.get(id=participant_id)
-
-        # Save single item
         WishlistItem.objects.create(
-            participant=participant,
-            item_name=item_name,
-            details=details
+            user=user,
+            item_name=request.POST.get('itemName'),
+            details=request.POST.get('details')
         )
+        return redirect('homepage')
 
-        return redirect('wish')
+    return render(request, 'wish.html')
 
-    return render(request, 'wish.html', {'participants': participants})
+
+def generate_assignments(request):
+    name = request.session.get('username')
+    code = request.session.get('group_code')
+
+    group = Group.objects.get(code=code)
+    user = User.objects.get(name__iexact=name, group=group)
+
+    if not user.is_creator:
+        return HttpResponse("Only the group creator can assign!")
+
+    Assignment.objects.filter(giver__group=group).delete()
+    users = list(group.users.all())
+    receivers = users.copy()
+
+    while True:
+        random.shuffle(receivers)
+        if all(g != r for g, r in zip(users, receivers)):
+            break
+
+    for g, r in zip(users, receivers):
+        Assignment.objects.create(giver=g, receiver=r)
+
+    return redirect('homepage')
+
 
 def yourperson(request):
-    name = request.session.get('username', None)
+    name = request.session.get('username')
+    code = request.session.get('group_code')
 
-    if not name:
-        return redirect('homepage')  # If they didn’t enter a name first
+    if not name or not code:
+        return redirect('index')
 
-    try:
-        participant = User.objects.get(name__iexact=name)  # case-insensitive match
-    except User.DoesNotExist:
-        return render(request, 'yourperson.html', {
-            'participant': None,
-            'assigned_person': None,
-            'wishlist_items': [],
-            'error': f"Name '{name}' not found. Please check spelling."
-        })
+    group = Group.objects.get(code=code)
+    user = User.objects.get(name__iexact=name, group=group)
 
     try:
-        assigned = Assignment.objects.get(giver=participant).receiver
+        assigned = Assignment.objects.get(giver=user).receiver
         items = assigned.wishlist_items.all()
     except Assignment.DoesNotExist:
         assigned = None
         items = []
 
     return render(request, 'yourperson.html', {
-        'participant': participant,
+        'user': user,
         'assigned_person': assigned,
         'wishlist_items': items,
-        'error': None
+        'group': group
     })
-
-def generate_assignments():
-    # Remove old assignments first
-    Assignment.objects.all().delete()
-
-    participants = list(User.objects.all())
-    receivers = participants.copy()
-
-    # Shuffle until valid (no one gets themselves)
-    while True:
-        random.shuffle(receivers)
-        if all(giver != receiver for giver, receiver in zip(participants, receivers)):
-            break
-
-    # Create assignments
-    for giver, receiver in zip(participants, receivers):
-        Assignment.objects.create(giver=giver, receiver=receiver)

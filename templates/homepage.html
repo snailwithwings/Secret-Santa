@@ -1,47 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
 {% extends 'base.html' %}
-{% block title %}Enter Your Name{% endblock %}
+{% block title %}Your Secret Santa{% endblock %}
 {% block content %}
-<h1>🎅 Please Enter Your First Name 🎁</h1>
 
-<form method="post">
-  {% csrf_token %}
-  <label for="fname">First name:</label><br>
-  <input type="text" id="fname" name="fname" placeholder="Type your name here" required><br>
-  <input type="submit" value="See Who You Have!">
-</form>
+<h1>🎄 Welcome, {{ user.name }}! 🎁</h1>
 
-<p class="note">Your Secret Santa awaits...</p>
+<p><strong>Group Code:</strong> {{ group.code }}</p>
+
+<div class="button-container">
+    <a href="{% url 'yourperson' %}" class="action-btn">See Who You Have</a>
+    <a href="{% url 'wish' %}" class="action-btn">Add to Wishlist</a>
+
+    {% if is_creator %}
+    <a href="{% url 'generate_assignments' %}" class="assign-btn">Assign People</a>
+    {% endif %}
+</div>
 
 <style>
-form {
-    background-color: #ffafcc;
-    border: 4px solid #d62828;
-    border-radius: 20px;
-    display: inline-block;
-    padding: 40px 60px;
-    box-shadow: 5px 5px 20px rgba(0,0,0,0.3);
+.button-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 15px;
 }
-input[type="text"], input[type="submit"] {
-    font-size: 1.2em;
-    margin: 10px 0;
-    border-radius: 10px;
-    border: 2px solid #d62828;
-    text-align: center;
-    padding: 10px;
-}
-input[type="submit"] {
+
+.action-btn, .assign-btn {
+    padding: 12px 20px;
     background-color: #f77f00;
     color: white;
-    cursor: pointer;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    text-align: center;
     transition: 0.2s;
 }
-input[type="submit"]:hover {
+
+.action-btn:hover, .assign-btn:hover {
     background-color: #d62828;
     transform: scale(1.05);
 }
-.note {
-    margin-top: 25px;
-    font-size: 1.2em;
+
+.assign-btn {
+    background-color: #00b33c;
+}
+.assign-btn:hover {
+    background-color: #00802b;
 }
 </style>
 

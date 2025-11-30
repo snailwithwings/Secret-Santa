@@ -1,76 +1,58 @@
 {% extends 'base.html' %}
-{% block title %}Add to Wishlist{% endblock %}
+{% block title %}Add Wishlist Item{% endblock %}
 {% block content %}
 
-<h1>🎁 Add to Your Wishlist 🎄</h1>
-<p class="budget">This year’s Secret Santa budget is <span style="color:#d62828;">$25</span>!</p>
+<h1>🎁 Add an Item to Your Wishlist 🎄</h1>
 
-<div class="form-container">
+<form method="post" class="wishlist-form">
+    {% csrf_token %}
 
-    <form method="post">
-        {% csrf_token %}
+    <label for="itemName">Gift Idea</label><br>
+    <input type="text" id="itemName" name="itemName" placeholder="e.g., Gaming Headset" required><br><br>
 
-        <label for="personSelect">Select Your Name:</label>
-        <select id="personSelect" name="personSelect" required>
-            <option value="" disabled selected>-- Choose Your Name --</option>
+    <label for="details">Details / Notes</label><br>
+    <textarea id="details" name="details" placeholder="Size? Brand? Color? Link?" rows="4"></textarea><br><br>
 
-            {% for p in participants %}
-                <option value="{{ p.id }}">{{ p.name }}</option>
-            {% endfor %}
-        </select>
-
-        <label for="itemName">Gift Idea:</label>
-        <input type="text" id="itemName" name="itemName" placeholder="Enter item name." required>
-
-        <label for="details">Details (optional):</label>
-        <textarea id="details" name="details" placeholder="Add notes, colors, sizes, or links."></textarea>
-
-        <button type="submit">Add to Wishlist</button>
-    </form>
-
-    <button class="back-button" onclick="window.location.href='{% url 'homepage' %}'">
-        ← Back to Home
-    </button>
-
-</div>
-
-<p class="note">Keep your list within budget and make it merry! 🎅</p>
+    <button type="submit" class="submit-btn">Add Item</button>
+</form>
 
 <style>
-.form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-form {
+.wishlist-form {
     background-color: #ffafcc;
     border: 4px solid #d62828;
     border-radius: 20px;
-    padding: 40px 60px;
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+    padding: 30px;
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
+    margin: 30px auto;
+    text-align: center;
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.3);
 }
 
-label { display:block; margin-top:15px; font-size:1.2em; }
-select, input, textarea {
-    width:100%; padding:10px; border-radius:10px; border:2px solid #d62828;
-    margin-top:5px; text-align:center;
+.wishlist-form input,
+.wishlist-form textarea {
+    width: 90%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #d62828;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 1.1em;
 }
-textarea { height: 100px; }
-button {
-    background-color:#f77f00; color:white; padding:12px 30px;
-    border:none; border-radius:10px; margin-top:20px;
-    cursor:pointer; transition:0.2s;
-}
-button:hover { background-color:#d62828; transform:scale(1.05); }
 
-.back-button {
-    background-color:#5a2a27;
+.submit-btn {
+    background-color: #f77f00;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
 }
-.back-button:hover {
-    background-color:#f77f00;
+
+.submit-btn:hover {
+    background-color: #d62828;
+    transform: scale(1.05);
 }
 </style>
 
