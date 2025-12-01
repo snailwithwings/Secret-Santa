@@ -13,6 +13,16 @@
     <a href="{% url 'wish' %}" class="action-btn">Add to Wishlist</a>
 
     {% if is_creator %}
+    <p><strong>Budget Price:</strong></p>
+    <form method="POST">
+        {% csrf_token %}
+        <input 
+        type="number" 
+        name="budget" 
+        value="{{group.budget}}" 
+        required>
+        <button type="submit">Save</button>
+    </form>
     <a href="{% url 'generate_assignments' %}" class="assign-btn">Assign People</a>
     {% endif %}
 </div>

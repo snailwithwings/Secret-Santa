@@ -2,7 +2,7 @@ from django.db import models
 
 class Group(models.Model):
     code = models.CharField(max_length=4, unique=True)
-
+    budget = models.IntegerField(default=0)
     def __str__(self):
         return f"Group {self.code}"
 
@@ -39,4 +39,10 @@ class Assignment(models.Model):
 
     def __str__(self):
         return f"{self.giver.name} → {self.receiver.name}"
+
+# class Budget(models.Model):
+#     amount = models.IntegerField(default=0)
+
+#     def __str__(self):
+#         return str(self.budget)
 

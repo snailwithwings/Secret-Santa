@@ -3,6 +3,7 @@
 {% block content %}
 
 <h1>🎁 Add an Item to Your Wishlist 🎄</h1>
+<h2>Budget: ${{group.budget}}</h2>
 
 <form method="post" class="wishlist-form">
     {% csrf_token %}

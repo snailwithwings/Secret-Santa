@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Group, User, WishlistItem, Assignment
 import random
@@ -70,6 +70,13 @@ def homepage(request):
         # Should not happen normally, but safety check:
         return redirect('index')
 
+    if request.method == 'POST' and user.is_creator:
+        new_budget = request.POST.get('budget')
+        if new_budget and new_budget.isdigit():
+            group.budget = int(new_budget)
+            group.save()
+            return redirect('homepage')  # refresh page after saving
+
     return render(request, 'homepage.html', {
         'user': user,
         'group': group,
@@ -91,7 +98,10 @@ def wish(request):
         )
         return redirect('homepage')
 
-    return render(request, 'wish.html')
+    return render(request, 'wish.html', {
+        'group': group,
+        'user': user
+    })
 
 
 def generate_assignments(request):
@@ -142,3 +152,15 @@ def yourperson(request):
         'wishlist_items': items,
         'group': group
     })
+
+# def edit_group_budget(request, group_id):
+#     group = get_object_or_404(Group, id=group_id)
+
+#     if request.method == 'POST':
+#         new_budget = request.POST.get('budget')
+#         if new_budget and new_budget.isdigit():
+#             group.budget = int(new_budget)
+#             group.save()
+#             return redirect('homepage', group_id=group.id)
+
+#     return render(request, 'homepage.html', {'group': group})
